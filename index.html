@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>梅花易数 在线排盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            background-color: white;
+            color: #1f1f1f;
+            font-size: 17px;
+            font-family: 微软雅黑, "Microsoft Yahei", arial;
+        }
+        
+        body {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        a {
+            color: inherit;
+            text-decoration: underline;
+        }
+        
+        #卦域 {
+            margin: 0 auto;
+            max-width: 500px;
+            padding: 5px;
+            user-select: none;
+        }
+        
+        #卦域 .row {
+            float: left;
+            width: 30%;
+        }
+        
+        #卦域 .row+.row {
+            margin-left: 5%;
+        }
+        
+        .阴爻,
+        .阳爻 {
+            background-color: transparent;
+            height: 25px;
+        }
+        
+        .阴爻:after {
+            content: '';
+            display: block;
+            position: relative;
+            height: 25px;
+            width: 15%;
+            top: 0;
+            left: 42.5%;
+            background-color: white;
+        }
+        
+        .单卦 {
+            background-color: black;
+        }
+        
+        .单卦 .br {
+            height: 10px;
+            background: white;
+        }
+        
+        .clear {
+            display: block;
+            height: 0;
+            clear: both;
+        }
+        
+        input {
+            width: 3.5em;
+            padding: 3px 5px;
+            border-radius: 2px;
+            background-color: white;
+            border: 1px solid gray;
+            color: inherit;
+        }
+        
+        button {
+            padding: 4px 18px;
+            background-color: #3F3F3F;
+            color: #e3e3e3;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.1s;
+            outline: none;
+        }
+        
+        input,
+        button {
+            font-family: inherit;
+            font-size: 18px;
+            margin: 5px;
+            font-weight: 800;
+        }
+        
+        button:active {
+            background-color: #171717;
+        }
+        
+        .起卦 {
+            margin: 25px auto;
+            text-align: center;
+            user-select: none;
+        }
+        
+        .卦名 {
+            text-align: center;
+            background-color: white;
+            font-size: 20px;
+            height: 35px;
+            overflow: hidden;
+            white-space: nowrap;
+            font-weight: 800;
+            color: #323232;
+            letter-spacing: 2px;
+        }
+        
+        #卦辞 {
+            padding: 15px;
+        }
+        
+        @media screen and (max-width: 380px) {
+            #卦域 .row {
+                float: left;
+                width: 32%;
+            }
+            #卦域 .row+.row {
+                margin-left: 2%;
+            }
+            input,
+            button {
+                font-size: 15px;
+            }
+        }
+        
+        .logo {
+            text-align: center;
+            padding-top: 25px;
+            user-select: none;
+            overflow: hidden;
+        }
+        
+        .logo small {
+            font-size: 0.8em;
+            color: gray;
+        }
+        
+        .logo img {
+            transition: all 1.5s;
+            transition-timing-function: ease-in-out;
+            width: 4.5cm;
+            height: 4.5cm;
+            display: inline-block;
+            transform: rotate(65deg);
+            display: block;
+            margin: 0 auto;
+        }
+        
+        #回到顶部 {
+            position: fixed;
+            bottom: 1em;
+            right: 1em;
+            font-size: 25px;
+            line-height: 25px;
+            user-select: none;
+            color: #929292;
+            display: none;
+        }
+        
+         ::selection {
+            color: #e5e5e5;
+            background-color: #1f1f1f;
+        }
+        
+        .main {
+            min-height: calc(100vh - 68px);
+        }
+        
+        .foot {
+            color: gray;
+            font-size: 14px;
+            line-height: 19px;
+            text-align: center;
+            padding: 15px;
+            height: 68px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main">
+        <div class="logo">
+            <img ondragstart='return false;' src="bg.svg" />
+        </div>
+        <form action="" method="get" onsubmit="return (function(){
+    算卦动画();return false;
+  })();">
+            <div class="起卦">
+                <input type="number" id="入上卦" placeholder="上卦">
+                <input type="number" id="入下卦" placeholder="下卦">
+                <input type="number" id="入爻动" placeholder="爻动">
+                <button type="submit">走你</button>
+                <button type="button" onclick="填入年月日时数()">按时间填入</button>
+            </div>
+        </form>
+        <div id="卦域">
+            <div class="clear"></div>
+            <div class="row" id="本卦">
+                <div class="卦名">༺乾༻</div>
+                <div id="上本卦" class="单卦" style="background-color: #f6f6f6;">
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                </div>
+                <div id="下本卦" class="单卦" style="background-color: #f6f6f6;">
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                </div>
+            </div>
+            <div class="row" id="互卦">
+                <div class="卦名">༺乾༻</div>
+                <div id="上互卦" class="单卦" style="background-color: #f6f6f6;">
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                </div>
+                <div id="下互卦" class="单卦" style="background-color: #f6f6f6;">
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                </div>
+            </div>
+            <div class="row" id="变卦">
+                <div class="卦名">༺乾༻</div>
+                <div id="上变卦" class="单卦" style="background-color: #f6f6f6;">
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                </div>
+                <div id="下变卦" class="单卦" style="background-color: #f6f6f6;">
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                    <div class="阳爻"></div>
+                    <div class="br"></div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div id="卦辞"></div>
+    </div>
+    <div id="回到顶部">⇧</div>
+    <div class="foot">
+        <p>一同学习梅花、想要问卦可加群：<a href="https://qm.qq.com/cgi-bin/qm/qr?k=DurSB9KwTRtT51GY7p4h3dBLNAtbEmLs&jump_from=webapi">698263999</a></p>
+        <p>本站使用的项目：<a href="https://gitee.com/foxnes/zy-mhys">zy-mhys (luuljh)</a>、<a href="https://www.nuget.org/profiles/YiJingFramework">YiJingFramework</a>（经部：271895cd-fcbf-4af9-aa94-c81c268a2327、象辞彖辞：fb50430b-c0cd-47a8-9919-15493f2c60b5）</p>
+    </div>
+
+    <script type="text/javascript" src="calendar.js"></script>
+
+    <script type="text/javascript">
+        填入年月日时数();
+        算卦动画();
+
+        function 填入年月日时数() {
+            时间 = new Date();
+            农历 = calendar.solar2lunar(时间.getFullYear(), 时间.getMonth() + 1, 时间.getDate());
+            生肖对应 = {
+                '鼠': 1,
+                '牛': 2,
+                '虎': 3,
+                '兔': 4,
+                '龙': 5,
+                '蛇': 6,
+                '马': 7,
+                '羊': 8,
+                '猴': 9,
+                '鸡': 10,
+                '狗': 11,
+                '猪': 12
+            }
+            农历.lYear = 生肖对应[农历.Animal]
+                // 农历.lYear 农历.lMonth 农历.lDay
+            时辰 = 时间.getHours()
+            if (时辰 % 2 == 1) 时辰 += 1
+            时辰 = 时辰 / 2 + 1
+
+            var temp = (农历.lYear + 农历.lMonth + 农历.lDay) % 8;
+            if (temp == 0)
+                temp = 8;
+            $('#入上卦').val(temp);
+
+            var temp = (temp + 时辰) % 8;
+            if (temp == 0)
+                temp = 8;
+            $('#入下卦').val(temp);
+
+            var temp = (农历.lYear + 农历.lMonth + 农历.lDay + 时辰) % 6;
+            if (temp == 0)
+                temp = 6;
+            $('#入爻动').val(temp);
+        }
+
+        // 坤卦提前
+        八卦 = [
+            ['坤', '000', '土'],
+            ['乾', '111', '金'],
+            ['兑', '011', '金'],
+            ['离', '101', '火'],
+            ['震', '001', '木'],
+            ['巽', '110', '木'],
+            ['坎', '010', '水'],
+            ['艮', '100', '土']
+        ];
+
+        六四卦 = [
+            ["乾", "111111"],
+            ["坤", "000000"],
+            ["屯", "100010"],
+            ["蒙", "010001"],
+            ["需", "111010"],
+            ["讼", "010111"],
+            ["师", "010000"],
+            ["比", "000010"],
+            ["小畜", "111011"],
+            ["履", "110111"],
+            ["泰", "111000"],
+            ["否", "000111"],
+            ["同人", "101111"],
+            ["大有", "111101"],
+            ["谦", "001000"],
+            ["豫", "000100"],
+            ["随", "100110"],
+            ["蛊", "011001"],
+            ["临", "110000"],
+            ["观", "000011"],
+            ["噬嗑", "100101"],
+            ["贲", "101001"],
+            ["剥", "000001"],
+            ["复", "100000"],
+            ["无妄", "100111"],
+            ["大畜", "111001"],
+            ["颐", "100001"],
+            ["大过", "011110"],
+            ["坎", "010010"],
+            ["离", "101101"],
+            ["咸", "001110"],
+            ["恒", "011100"],
+            ["遁", "001111"],
+            ["大壮", "111100"],
+            ["晋", "000101"],
+            ["明夷", "101000"],
+            ["家人", "101011"],
+            ["睽", "110101"],
+            ["蹇", "001010"],
+            ["解", "010100"],
+            ["损", "110001"],
+            ["益", "100011"],
+            ["夬", "111110"],
+            ["姤", "011111"],
+            ["萃", "000110"],
+            ["升", "011000"],
+            ["困", "010110"],
+            ["井", "011010"],
+            ["革", "101110"],
+            ["鼎", "011101"],
+            ["震", "100100"],
+            ["艮", "001001"],
+            ["渐", "001011"],
+            ["归妹", "110100"],
+            ["丰", "101100"],
+            ["旅", "001101"],
+            ["巽", "011011"],
+            ["兑", "110110"],
+            ["涣", "010011"],
+            ["节", "110010"],
+            ["中孚", "110011"],
+            ["小过", "001100"],
+            ["既济", "101010"],
+            ["未济", "010101"]
+        ];
+
+        function $(id) {
+            // 只能选一个元素
+            return {
+                dom: document.querySelector(id),
+                val: function(text) {
+                    if (typeof text == 'undefined') {
+                        return $(id).dom.value;
+                    } else {
+                        $(id).dom.value = text;
+                    }
+                },
+                html: function(code, add) {
+                    if (typeof code == 'undefined') {
+                        return $(id).dom.innerHTML;
+                    } else {
+                        if (typeof add == 'undefined') {
+                            $(id).dom.innerHTML = code;
+                        } else {
+                            $(id).dom.innerHTML += code;
+                        }
+                    }
+                },
+                画爻: function(爻) {
+                    $(id).html('');
+                    // 爻 如 101
+                    爻 = 爻.split('');
+                    爻.forEach(function(item) {
+                        if (item == 1) {
+                            // 阳爻
+                            $(id).html('<div class="阳爻"></div><div class="br"></div>', '+');
+                        } else {
+                            $(id).html('<div class="阴爻"></div><div class="br"></div>', '+');
+                        }
+                    });
+                    // 画完卦判断一下是哪个卦，好定五行颜色
+                    八卦.forEach(function(item) {
+                        if (item[1] == 爻.join('')) {
+                            $(id).五行着色(item[2]);
+                        }
+                    })
+                },
+                五行着色: function(五行) {
+                    let color = 'black';
+                    switch (五行) {
+                        case '金':
+                            color = '#ebbb00';
+                            break;
+                        case '木':
+                            color = '#00982d';
+                            break;
+                        case '水':
+                            color = '#005f98';
+                            break;
+                        case '火':
+                            color = '#b82200';
+                            break;
+                        case '土':
+                            color = '#9e5900';
+                            break;
+                    }
+                    $(id).dom.style = 'background-color: ' + color + ';';
+                }
+            }
+        }
+
+        function 算卦动画() {
+            $('.logo img').dom.style.transform = $('.logo img').dom.style.transform == 'rotate(965deg)' ? 'rotate(65deg)' : 'rotate(965deg)';
+            setTimeout(function() {
+                算卦();
+            }, 500);
+        }
+
+        function 算卦() {
+            while (document.getElementsByClassName('卦名').length > 0) {
+                document.getElementsByClassName('卦名')[0].remove();
+            }
+            if ($('#入上卦').val() == "") {
+                $('#入上卦').val(0);
+            }
+            if ($('#入下卦').val() == "") {
+                $('#入下卦').val(0);
+            }
+            if ($('#入爻动').val() == "") {
+                $('#入爻动').val(0);
+            }
+
+            var 上 = (($('#入上卦').val() % 8 + 8) % 8);
+            var 下 = (($('#入下卦').val() % 8 + 8) % 8);
+            var 爻 = (($('#入爻动').val() % 6 + 6) % 6);
+            // 本卦
+            $('#上本卦').画爻(八卦[上][1]);
+            $('#下本卦').画爻(八卦[下][1]);
+            var 本卦 = 八卦[上][1] + 八卦[下][1];
+            // 互卦
+            var 互卦 = 八卦[上][1].substr(1, 2) + 八卦[下][1].substr(0, 1);
+            互卦 += 八卦[上][1].substr(2, 1) + 八卦[下][1].substr(0, 2);
+            $('#上互卦').画爻(互卦.substr(0, 3));
+            $('#下互卦').画爻(互卦.substr(3, 3));
+            // 变卦
+            var 变卦 = (八卦[上][1] + 八卦[下][1]).split('');
+            爻 = (爻 == 0) ? 0 : (6 - 爻);
+            变卦[爻] = (变卦[爻] == '1') ? '0' : '1';
+            变卦 = 变卦.join('');
+            $('#上变卦').画爻(变卦.substr(0, 3));
+            $('#下变卦').画爻(变卦.substr(3, 3));
+
+            // 判断重卦
+            function 断重卦(id, 卦象) {
+                for (var i = 0; i < 六四卦.length; i++) {
+                    // 这里需要把卦象反过来！！！因为顺序不一样
+                    if (六四卦[i][1] == 卦象.split('').reverse().join('')) {
+                        $(id).html('<div class="卦名">༺' + 六四卦[i][0] + '༻</div>' + $(id).html());
+                        let index = i + 1;
+                        $(id).dom.onclick = function() {
+                            展示爻辞(index);
+                        }
+                    }
+                }
+            }
+            断重卦('#本卦', 本卦);
+            断重卦('#互卦', 互卦);
+            断重卦('#变卦', 变卦);
+        }
+
+        function 展示爻辞(index) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    $('#卦辞').html(xmlhttp.responseText);
+                }
+            }
+            xmlhttp.open("GET", "./64guaci/" + index, true);
+            xmlhttp.send();
+        }
+        window.onscroll = function() {
+            if (document.documentElement.scrollTop > 700) {
+                $('#回到顶部').dom.style = "display: block;"
+            } else {
+                $('#回到顶部').dom.style = "";
+            }
+        }
+        $('#回到顶部').dom.onclick = function() {
+            back2top = setInterval(function() {
+                var dtop = document.documentElement.scrollTop;
+                var speed = Math.floor(-dtop / 8);
+                document.documentElement.scrollTop = dtop + speed;
+                if (dtop == 0) {
+                    clearInterval(back2top);
+                }
+            }, 10);
+        }
+    </script>
+
+</body>
+
+</html>
