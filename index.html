@@ -540,8 +540,7 @@
                     $('#卦辞').html(xmlhttp.responseText);
                 }
             }
-            xmlhttp.open("GET", "./64guaci/" + index +
-                "?t=" + (new Date()).format("yyyyMMddhh"), true);
+            xmlhttp.open("GET", "./64guaci/" + index, true);
             xmlhttp.send();
         }
         window.onscroll = function() {
