@@ -314,19 +314,12 @@
             if (时辰 % 2 == 1) 时辰 += 1
             时辰 = 时辰 / 2 + 1
 
-            var temp = (农历.lYear + 农历.lMonth + 农历.lDay) % 8;
-            if (temp == 0)
-                temp = 8;
+            var temp = 农历.lYear + 农历.lMonth + 农历.lDay;
             $('#入上卦').val(temp);
 
-            var temp = (temp + 时辰) % 8;
-            if (temp == 0)
-                temp = 8;
+            var temp = temp + 时辰;
             $('#入下卦').val(temp);
 
-            var temp = (农历.lYear + 农历.lMonth + 农历.lDay + 时辰) % 6;
-            if (temp == 0)
-                temp = 6;
             $('#入爻动').val(temp);
         }
 
@@ -371,7 +364,7 @@
             ["大畜", "111001"],
             ["颐", "100001"],
             ["大过", "011110"],
-            ["坎", "010010"],
+            ["习坎", "010010"],
             ["离", "101101"],
             ["咸", "001110"],
             ["恒", "011100"],
