@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "./static/css/main.7fbc7ebd.chunk.css",
+    "main.js": "./static/js/main.5ed14340.chunk.js",
+    "main.js.map": "./static/js/main.5ed14340.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.c5908db4.js",
+    "runtime-main.js.map": "./static/js/runtime-main.c5908db4.js.map",
+    "static/js/2.f3b8d683.chunk.js": "./static/js/2.f3b8d683.chunk.js",
+    "static/js/2.f3b8d683.chunk.js.map": "./static/js/2.f3b8d683.chunk.js.map",
+    "index.html": "./index.html",
+    "static/css/main.7fbc7ebd.chunk.css.map": "./static/css/main.7fbc7ebd.chunk.css.map",
+    "static/js/2.f3b8d683.chunk.js.LICENSE.txt": "./static/js/2.f3b8d683.chunk.js.LICENSE.txt",
+    "static/media/Taichi.90af91b5.svg": "./static/media/Taichi.90af91b5.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.c5908db4.js",
+    "static/js/2.f3b8d683.chunk.js",
+    "static/css/main.7fbc7ebd.chunk.css",
+    "static/js/main.5ed14340.chunk.js"
+  ]
+}
